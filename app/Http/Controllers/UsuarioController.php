@@ -11,7 +11,7 @@ class UsuarioController extends Controller
    public static function verificaemail($email){
       try{
         $resultdata=Usuario::select('id','email')
-        ->where('email','=',$email)
+        ->where('email','like',$email)
         ->where('estado','=',1)
         ->first();
 
@@ -42,8 +42,8 @@ class UsuarioController extends Controller
        $resultdata ='';
        try{
            $resultdata = Usuario::select('id','email')
-           ->where('email', '=', $email)
-           ->where('password', '=', $password)
+           ->where('email', 'like', $email)
+           ->where('password', 'like', $password)
            ->where('estado', '=', 1)
            ->first();
 
@@ -51,7 +51,8 @@ class UsuarioController extends Controller
                return response()->json([
                    "status" => 400,
                    "data" => $resultdata,
-                   "login" => false
+                   "login" => false,
+                   'mensage'=>'Incorrecto'
                ]);
              }
            else
@@ -68,6 +69,20 @@ class UsuarioController extends Controller
                "error" => "Error: " . $e->getMessage()
            ]);
        }
+   }
+
+   public static function guardar(Request $request){
+    $usuario= new Usuario();
+    $usuario->email=$request->email;
+    $usuario->password=bcrypt($request->password);
+    $usuario->estado=1;
+    $usuario->save();
+
+    return response()->json([
+        'status'=>200,
+        "data"=>$usuario,
+        "save"=>true
+    ]);
    }
 
 }

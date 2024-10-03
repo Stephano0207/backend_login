@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get("login/{email}",[UsuarioController::class,'verificaemail']);
 Route::get("login/{email}/{password}",[UsuarioController::class,"verificaclave"]);
+Route::post('login',[UsuarioController::class,'guardar']);
